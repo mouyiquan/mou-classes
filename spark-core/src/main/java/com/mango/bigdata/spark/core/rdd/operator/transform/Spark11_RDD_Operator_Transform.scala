@@ -3,22 +3,23 @@ package com.mango.bigdata.spark.core.rdd.operator.transform
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
-object Spark09_RDD_Operator_Transform {
+/**
+ * sortBy排序shuffle
+ */
+object Spark11_RDD_Operator_Transform {
   def main(args: Array[String]): Unit = {
     //TODO 准备环境
     val sparkConf = new SparkConf().setMaster("local[*]").setAppName("RDD");
     val sc = new SparkContext(sparkConf)
 
-    //TODO 创建RDD
+    val rdd = sc.makeRDD(List(6, 2, 4, 1, 5, 3), 2)
+
     /**
-     * distinct
-     * reduceBykey
+     * sortBy排序shuffle
      */
-    val rdd = sc.makeRDD(List(1, 2, 3, 4, 1, 2, 3))
+    val sortRdd: RDD[Int] = rdd.sortBy(num => num);
 
-    val value: RDD[Int] = rdd.distinct()
-
-    value.collect().foreach(println)
+    sortRdd.saveAsTextFile("output")
 
     //TODO 关闭环境
     sc.stop()
